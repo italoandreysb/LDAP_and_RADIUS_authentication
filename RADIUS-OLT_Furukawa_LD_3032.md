@@ -60,4 +60,4 @@ Aba condition:
  Selecione o vendor "**Cisco-AV-Pair**", adicione exatamente o attribute vaue: **"shell:roles=admin"** (sem àspas) para dar permissão administrativa.
 
 Desta forma todos os usuários que se enquadrarem nesta política (e consequentemente nos grupos previamente selecionados) farão parte do grupo interno "admin" e poderão exercer funcões administrativas.
-.
+
