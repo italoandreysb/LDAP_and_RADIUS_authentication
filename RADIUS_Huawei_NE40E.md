@@ -1,32 +1,16 @@
-VRP (R)  v8.190 (NE40E V800R011C10SPC100)
+# Configurando autenticação RADIUS no HUAWEI NE40E
+## Especificações do modelo em questão:
+```
+VRP (R)  v8.190 (NE40E V800R011C10SPC100)   
 Modelo: HUAWEI NE40E-F1A-14H24Q
-
-Comandos úteis
-  ```display domain```
-  ```display radius-server configuration group gerencia_radius```
-  ```commit trial```
-
-Habilitei os logs:
-``` 
-info-center source default channel logbuffer log level debugging state on
-commit trial
 ```
-
-Testando o radius:
-```
-aaa
- authentication-scheme gerencia_radius
-  test-aaa peter.parker adminadmin radius-group gerencia_radius
-  # Após isso cheque os logs do NPS
-```
-
-## Habilite o RADIUS:
+### Habilite o RADIUS:
 ```
 radius enable
 commit
 ```
 
-## Crie o server group:
+### Crie o server group:
 ```
 radius-server group gerencia_radius
  radius-server shared-key-cipher <senha_definida>
@@ -36,11 +20,10 @@ radius-server group gerencia_radius
  radius-server user-name original
  quit
 ```
- Observação: o comando "undo radius-server user-name domain-included" não pode estar aplicado, caso contrário, ao definir o domínio padrão, é exibido o erro:
-  Error: Configuring devices in a RADIUS server group or TACACS server template bound to the admin domain to send user names without domain names brings security risks.
+ Observação: o comando "undo radius-server user-name domain-included" não pode estar aplicado, caso contrário, ao definir o domínio padrão, é exibido o erro: "Error: Configuring devices in a RADIUS server group or TACACS server template bound to the admin domain to send user names without domain names brings security risks."
 
 
-## Crie os esquemas de autenticaçãoe e domínio:
+### Crie os esquemas de autenticaçãoe e domínio:
 ```
 aaa
  authentication-scheme gerencia_radius
@@ -63,7 +46,7 @@ aaa
   quit
  quit
 ```
-## Confgure o a interface VTY:
+### Confgure o a interface VTY:
 ```
 user-interface vty 0 7
  authentication-mode aaa
@@ -72,8 +55,34 @@ user-interface vty 0 7
  idle-timeout 60 0
  protocol inbound ssh
 ```
-## Defina o dominio criado como padrão:
+### Defina o dominio criado como padrão:
 ```
 aaa
  default-domain admin gerencia_radius 
+```
+### Fim da configuração.
+
+## Comandos úteis:  
+
+Mosrar o domínio:  
+  ```display domain```  
+
+Mostrando grupo configurado:   
+  ```display radius-server configuration group gerencia_radius```  
+
+Salvamento temporário, salvará as configuração por 600s ou até que sejam salvas oficialmente com o comando "Commit":  
+  ```commit trial```  
+
+Habilitando os logs:
+``` 
+info-center source default channel logbuffer log level debugging state on
+commit trial
+```
+
+Testando o radius:
+```
+aaa
+ authentication-scheme gerencia_radius
+  test-aaa <user.name> adminadmin radius-group gerencia_radius
+  # Após isso cheque os logs do NPS
 ```
